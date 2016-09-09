@@ -1,3 +1,3 @@
 #!/bin/sh
 
-rm log
+rm babel_log
