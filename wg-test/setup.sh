@@ -1,21 +1,19 @@
-ip link add wg0 type wireguard
-ip addr add dev wg0 10.0.1.$1
-
-wg set wg0 \
-listen-port 2345 \
-private-key /home/jehan2/host/wg-test/privatekey$1 \
-
-ip link set up dev wg0
+a=$1
 
 shift
 for var in "$@"
 do
-    ip route add 10.0.0.$var dev eth0
+    ip link add wg$var type wireguard
 
-    wg set wg0 \
+    wg set wg$var \
+    listen-port 2345 \
+    private-key /home/jehan2/host/wg-test/privatekey$a \
     peer $(< /home/jehan2/host/wg-test/publickey$var) \
-    allowed-ips 10.0.1.$var \
+    allowed-ips 0.0.0.0/0 \
     endpoint 10.0.0.$var:2345
 
-    ip route add 10.0.1.$var dev wg0
+    ip link set up dev wg$var
+    # ip addr add dev wg$var 10.0.1.$a$var
+    # ip route add 10.0.0.$var dev eth0
+    # ip route add 10.0.1.$var$a dev wg$var
 done
