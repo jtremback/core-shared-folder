@@ -3,3 +3,4 @@
 *.pyc*
 /fastd-build/*
 /libuecc-7/*
+/fastd/*
