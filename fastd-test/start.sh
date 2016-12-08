@@ -1,4 +1,4 @@
-# usage: start <me>
+# usage: start <my_ip> <my_number>
 
 touch fastd.conf
 echo \

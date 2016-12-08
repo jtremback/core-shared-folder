@@ -1,15 +1,15 @@
-# usage: addpeer <ip> <iface> <peer>
+# usage: addpeer <peer_number> <peer_ip> <peer_iface>
 
 mkdir -p peers
 
-ip=$1
-iface=$2
-peer=$3
+peer_number=$1
+peer_iface=$2
+peer_ip=$3
 
 touch peers/peer$peer
 echo '
-key "'$(< /home/jehan2/host/fastd-test/publickey$peer)'";
-remote "'$ip'" port 1234;
-' > peers/peer$peer
+key "'$(< /home/jehan2/host/fastd-test/publickey$peer_number)'";
+remote "'$peer_ip'" port 1234;
+' > peers/peer$peer_number
 
-ip route add $ip dev $iface
+ip route add $peer_ip dev $peer_iface

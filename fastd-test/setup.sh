@@ -1,3 +1,5 @@
+# Does it all. deprecated.
+
 # nft add table inet althea
 # nft add chain inet althea
 
