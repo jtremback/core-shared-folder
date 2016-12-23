@@ -12,7 +12,7 @@ class BabelRef(CoreService):
     # a unique name is required, without spaces
     _name = "BabelRef"
     # you can create your own group here
-    _group = "Routing"
+    _group = "MyServices"
     # this controls the starting order vs other enabled services
     _startindex = 50
     # list of startup commands, also may be generated during startup

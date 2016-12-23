@@ -3,12 +3,12 @@
 mkdir -p peers
 
 peer_number=$1
-peer_iface=$2
-peer_ip=$3
+peer_ip=$2
+peer_iface=$3
 
-touch peers/peer$peer
+touch peers/peer$peer_number
 echo '
-key "'$(< /home/jehan2/host/fastd-test/publickey$peer_number)'";
+key "'$(cat /home/jehan2/host/fastd-test/publickey$peer_number)'";
 remote "'$peer_ip'" port 1234;
 ' > peers/peer$peer_number
 

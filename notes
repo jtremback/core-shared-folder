@@ -1,0 +1,23 @@
+# add table
+nft add table jehan
+
+# add chain with default policy to drop all packets
+nft add chain jehan input "{ type filter hook input priority 0; policy drop; }"
+
+# change to accept
+nft chain jehan input "{ policy accept;  }"
+
+# back to dropping
+nft chain jehan input "{ policy drop; }"
+
+# accept udp packets on port 1234
+nft add rule jehan input udp dport 1234 accept
+
+# accept anything coming out of tap0
+nft add rule jehan input meta iifname tap0 accept
+
+# get handle
+nft --handle list chain jehan input
+
+# try deleting rule (with handle from above)
+nft delete rule jehan input handle 3
