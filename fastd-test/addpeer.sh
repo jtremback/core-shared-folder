@@ -9,6 +9,7 @@ peer_iface=$3
 touch peers/peer$peer_number
 echo '
 key "'$(cat /home/jehan2/host/fastd-test/publickey$peer_number)'";
+interface "%n";
 remote "'$peer_ip'" port 1234;
 ' > peers/peer$peer_number
 

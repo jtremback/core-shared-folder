@@ -1,23 +1,55 @@
+# Block all packets at input (might actually want this at forward or something), except for those going to the tunnel port, and those coming out of the tunnel interface. Mark packets coming into the tunnel interface.
+
 # add table
-nft add table jehan
+nft add table althea
 
 # add chain with default policy to drop all packets
-nft add chain jehan input "{ type filter hook input priority 0; policy drop; }"
+nft add chain althea input "{ type filter hook input priority 0; policy drop; }"
 
 # change to accept
-nft chain jehan input "{ policy accept;  }"
+nft chain althea input "{ policy accept; }"
 
 # back to dropping
-nft chain jehan input "{ policy drop; }"
+nft chain althea input "{ policy drop; }"
 
 # accept udp packets on port 1234
-nft add rule jehan input udp dport 1234 accept
+nft add rule althea input udp dport 1234 accept
 
 # accept anything coming out of tap0
-nft add rule jehan input meta iifname tap0 accept
+nft add rule althea input meta iifname tap0 accept
 
 # get handle
-nft --handle list chain jehan input
+nft --handle list chain althea input
 
 # try deleting rule (with handle from above)
-nft delete rule jehan input handle 3
+nft delete rule althea input handle 3
+
+# Block all packets at forward except for those going out the tunnel interface or coming from the tunnel port. Mark packets going out the tunnel interface.
+
+table ip althea {
+	chain fwd {
+		type filter hook forward priority 0; policy drop;
+		jump input-tunnels
+	}
+
+	chain output-tunnels {
+		oifname "peer1" accept
+		oifname "peer3" accept
+	}
+
+	chain input-tunnels {
+		iifname "peer1" jump output-tunnels
+		iifname "peer3" jump output-tunnels
+	}
+}
+
+# ways to do this:
+# 1. Create nft rules to mark with iifname + oifname. Create tc classifier looking for iifname + oifname. (any random number *could* be used instead of iifname + oifname).
+
+table ip althea {
+  chain fwd {
+    type filter hook forward priority 0; policy drop;
+    iifname "peer1" . oifname "peer3" mark 13 accept
+    iifname "peer3" . oifname "peer1" mark 31 accept
+  }
+}
