@@ -43,13 +43,20 @@ table ip althea {
 	}
 }
 
-# ways to do this:
-# 1. Create nft rules to mark with iifname + oifname. Create tc classifier looking for iifname + oifname. (any random number *could* be used instead of iifname + oifname).
+# show filters
+tc filter show dev peer4
 
-table ip althea {
-  chain fwd {
-    type filter hook forward priority 0; policy drop;
-    iifname "peer1" . oifname "peer3" mark 13 accept
-    iifname "peer3" . oifname "peer1" mark 31 accept
-  }
-}
+# show classes
+tc -s class show dev peer4
+
+# add drr class
+tc class add dev peer4 parent 1: classid 1:2 drr quantum 800
+
+# delete class
+tc class del dev peer4 classid 1:2 root
+
+# tc filter that selects a fw mark
+tc filter add dev peer4 parent 1: protocol ip prio 1 handle 24 fw classid 1:1
+
+# tc filter that selects everything with lower (?) priority
+tc filter add dev peer4 parent 1: protocol all prio 2 u32 match u32 0 0 classid 1:3
