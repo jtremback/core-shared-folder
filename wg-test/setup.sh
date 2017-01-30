@@ -1,3 +1,5 @@
+# usage: setup.sh <my peer number> <their peer number>
+
 a=$1
 
 shift
@@ -8,7 +10,7 @@ do
     wg set wg$var \
     listen-port 2345 \
     private-key /home/jehan2/host/wg-test/privatekey$a \
-    peer $(< /home/jehan2/host/wg-test/publickey$var) \
+    peer $(cat /home/jehan2/host/wg-test/publickey$var) \
     allowed-ips 0.0.0.0/0 \
     endpoint 10.0.0.$var:2345
 

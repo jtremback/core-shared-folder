@@ -1,3 +1,5 @@
+# usage: addrules <peer_number> ...
+
 nft flush ruleset
 nft add table althea
 nft add chain althea fwd "{ type filter hook forward priority 0; policy drop; }"
